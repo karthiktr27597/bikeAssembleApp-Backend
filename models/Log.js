@@ -18,11 +18,15 @@ const logSchema = new mongoose.Schema({
   },
   logoutTime: {
     type: Date,
-    required: true
+    default: null,
   },
-  duration: {
+  standardDuration: {
     type: Number,
     required: true
+  },
+  actualDuration: {
+    type: Number,
+    default: null,
   }
 
 });
