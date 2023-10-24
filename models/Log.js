@@ -27,6 +27,10 @@ const logSchema = new mongoose.Schema({
   actualDuration: {
     type: Number,
     default: null,
+  },
+  BikeAssumbled: {
+    type: Number,
+    default: 0,
   }
 
 });

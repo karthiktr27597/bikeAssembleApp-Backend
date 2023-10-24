@@ -17,7 +17,7 @@ app.use(cors());
 dotenv.config();
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URL);  // mongodb://localhost:27017/employee-logs
+mongoose.connect('mongodb://localhost:27017/employee-logs');  // mongodb://localhost:27017/employee-logs //process.env.MONGO_URL
 
 // Use routes
 app.use('/employee', employeeRoutes);

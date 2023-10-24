@@ -12,8 +12,6 @@ router.post('/reports', async (req, res) => {
 
         // console.log('startDate', startDate);
         // console.log('endDate', endDate);
-
-
         const result = await Log.find({
             employeeId: employee,
             logoutTime: {
@@ -22,10 +20,10 @@ router.post('/reports', async (req, res) => {
             }
         })
 
-        res.send(result)
+        return res.send(result)
 
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        return res.status(500).json({ success: false, message: error.message });
     }
 });
 

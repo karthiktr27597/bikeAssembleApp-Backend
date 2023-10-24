@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/login', async (req, res) => {
     try {
         let { employeeId, duration, bike } = req.body;
+       // console.log(req.body)
 
         if (!employeeId || !bike) {
             return res.status(400).json({ success: false, message: "Invalid Input" })
@@ -25,10 +26,32 @@ router.post('/login', async (req, res) => {
             standardDuration: duration,
         });
         await log.save();
+
+        const intervalInMilliseconds = duration * 60 * 1000
+
+        async function updateBikeCount() {
+            console.log('setInterval');
+            try {
+                const result = await Log.updateOne(
+                    {
+                        employeeId,
+                        logoutTime: null
+                    },
+                    { $inc: { BikeAssumbled: 1 } }
+                );
+                console.log(result);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        setInterval(updateBikeCount, intervalInMilliseconds)
+        console.log('check')
         res.status(201).json({ success: true, log });
+
     } catch (error) {
         console.log(error)
-        res.status(500).json({ success: false, message: error.message });
+        return res.status(500).json({ success: false, message: error.message });
     }
 });
 
@@ -36,7 +59,7 @@ router.post('/logout', async (req, res) => {
     try {
         const { employeeId } = req.body;
 
-        console.log(employeeId);
+      //  console.log(employeeId);
 
         const findData = await Log.find({
             employeeId,
@@ -44,7 +67,7 @@ router.post('/logout', async (req, res) => {
         })
 
         if (!findData) {
-            res.status(400).json({ success: false, message: "Data not found" });
+            return res.status(400).json({ success: false, message: "Data not found" });
         }
 
         const currentTime = new Date();
@@ -54,7 +77,6 @@ router.post('/logout', async (req, res) => {
 
         console.log("finddata", findData)
         console.log('actualDuration', timeDifferenceInMinutes)
-
 
         const result = await Log.updateMany(
             { employeeId, logoutTime: null },
@@ -66,10 +88,10 @@ router.post('/logout', async (req, res) => {
             }
         );
 
-        res.status(201).json({ success: true, data: result });
+        return res.status(201).json({ success: true, data: result });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: error.message });
+        return res.status(500).json({ success: false, message: error.message });
     }
 });
 
